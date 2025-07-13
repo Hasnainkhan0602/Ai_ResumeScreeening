@@ -146,14 +146,13 @@
       formData.append("save_to_db", document.getElementById("saveToDb").checked);
 
       try {
-        const backendURL = window.location.hostname.includes("localhost")
-       ? "http://127.0.0.1:5000/upload"
-       : "https://ai-resumescreeening.onrender.com"; 
+        const backendURL = "https://ai-resumescreeening.onrender.com/upload"; // ✅ Fixed full URL to prevent 405
 
-      const res = await fetch(backendURL, {
-      method: "POST",
-      body: formData, 
-      });
+        const res = await fetch(backendURL, {
+          method: "POST",
+          body: formData
+        });
+
         const contentType = res.headers.get("content-type");
 
         if (res.ok && contentType && contentType.includes("application/json")) {
@@ -184,7 +183,6 @@
           results.innerHTML = output;
           exportButtons.classList.remove("d-none");
           renderChart(scoredResumes);
-          console.log("✅ Output rendered");
 
         } else {
           const errorText = await res.text();
