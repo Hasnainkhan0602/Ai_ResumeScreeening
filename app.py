@@ -6,11 +6,16 @@ from datetime import datetime
 from utils import extract_text
 import pdfplumber
 from flask import Flask, request, jsonify, render_template
+from flask import render_template
 
 
 
 app = Flask(__name__)
 CORS(app)
+@app.route("/")
+def index():
+    return render_template("index.html")
+
 
 DB_NAME = "resume_screening.db"
 
@@ -88,6 +93,10 @@ def extract_text_from_pdf(file_path):
 
 if __name__ == "__main__":
     app.run(debug=True)
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route("/upload-dev", methods=["POST"])
 def upload_dev():
     # your logic here
