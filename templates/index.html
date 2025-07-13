@@ -146,11 +146,7 @@
       formData.append("save_to_db", document.getElementById("saveToDb").checked);
 
       try {
-        const backendURL = window.location.hostname.includes("localhost")
-  ? "http://127.0.0.1:5000/upload"
-  : "/upload";
-
-        fetch(backendURL, {
+        const res = await fetch("http://127.0.0.1:5000/upload", {
           method: "POST",
           body: formData
         });
