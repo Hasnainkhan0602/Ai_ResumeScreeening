@@ -43,7 +43,7 @@ def save_result(jd_file, resume_file, score, keywords):
     conn.close()
 
 @app.route("/upload", methods=["POST"])
-def upload():
+def upload_main():
     jd_file = request.files.get("job_description")
     resumes = request.files.getlist("resumes")
 
@@ -88,7 +88,7 @@ def extract_text_from_pdf(file_path):
 
 if __name__ == "__main__":
     app.run(debug=True)
-@app.route("/upload", methods=["POST"])
-def upload():
+@app.route("/upload-dev", methods=["POST"])
+def upload_dev():
     # your logic here
     return jsonify({"message": "Upload received"})
