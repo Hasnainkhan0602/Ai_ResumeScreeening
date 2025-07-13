@@ -146,11 +146,14 @@
       formData.append("save_to_db", document.getElementById("saveToDb").checked);
 
       try {
-        const res = await fetch("http://127.0.0.1:5000/upload", {
-          method: "POST",
-          body: formData
-        });
+        const backendURL = window.location.hostname.includes("localhost")
+       ? "http://127.0.0.1:5000/upload"
+       : "https://ai-resumescreeening.onrender.com"; 
 
+      const res = await fetch(backendURL, {
+      method: "POST",
+      body: formData, 
+      });
         const contentType = res.headers.get("content-type");
 
         if (res.ok && contentType && contentType.includes("application/json")) {
