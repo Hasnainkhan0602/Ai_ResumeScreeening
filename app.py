@@ -1,21 +1,13 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import os
 import sqlite3
 from datetime import datetime
 from utils import extract_text
 import pdfplumber
-from flask import Flask, request, jsonify, render_template
-from flask import render_template
-
-
 
 app = Flask(__name__)
 CORS(app)
-@app.route("/")
-def index():
-    return render_template("index.html")
-
 
 DB_NAME = "resume_screening.db"
 
@@ -37,18 +29,12 @@ def init_db():
 
 init_db()
 
-def save_result(jd_file, resume_file, score, keywords):
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute("""
-        INSERT INTO results (jd_filename, resume_filename, score, matched_keywords, created_at)
-        VALUES (?, ?, ?, ?, ?)
-    """, (jd_file, resume_file, score, ', '.join(keywords), datetime.now().isoformat()))
-    conn.commit()
-    conn.close()
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 @app.route("/upload", methods=["POST"])
-def upload_main():
+def upload():
     jd_file = request.files.get("job_description")
     resumes = request.files.getlist("resumes")
 
@@ -81,6 +67,18 @@ def upload_main():
         },
         "resumes": results
     })
+
+def save_result(jd_file, resume_file, score, keywords):
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("""
+        INSERT INTO results (jd_filename, resume_filename, score, matched_keywords, created_at)
+        VALUES (?, ?, ?, ?, ?)
+    """, (jd_file, resume_file, score, ', '.join(keywords), datetime.now().isoformat()))
+    conn.commit()
+    conn.close()
+
+
 def extract_text_from_pdf(file_path):
     text = ""
     try:
@@ -93,11 +91,3 @@ def extract_text_from_pdf(file_path):
 
 if __name__ == "__main__":
     app.run(debug=True)
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route("/upload-dev", methods=["POST"])
-def upload_dev():
-    # your logic here
-    return jsonify({"message": "Upload received"})
