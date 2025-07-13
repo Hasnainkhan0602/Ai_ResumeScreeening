@@ -91,3 +91,8 @@ if __name__ == "__main__":
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route("/upload", methods=["POST"])
+def upload():
+    # your logic here
+    return jsonify({"message": "Upload received"})
